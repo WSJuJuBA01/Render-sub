@@ -5,6 +5,7 @@ from threading import Thread
 import os
 import time
 import requests
+import asyncio
 
 TOKEN = os.getenv("BOT_TOKEN")
 
@@ -34,20 +35,19 @@ def health():
 
 def run_bot():
     print("Бот запущен...")
-    while True:
-        try:
-            app_bot.run_polling()
-        except Exception as e:
-            print(f"Ошибка бота: {e}")
-            time.sleep(5)
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    try:
+        app_bot.run_polling()
+    except Exception as e:
+        print(f"Ошибка бота: {e}")
 
 def keep_alive():
-    """Пинг сам себя чтобы не уснул на Render"""
     url = os.getenv('RENDER_EXTERNAL_URL', '')
     if not url:
         url = os.getenv('PUBLIC_URL', '')
     if not url:
-        url = 'https://wsvpn-bobot.onrender.com'  # ← ВАШ URL!
+        url = 'https://wsvpn-bobot.onrender.com'
     url = url.rstrip('/')
     
     print(f"[keep_alive] Запущен пинг для {url}")
@@ -59,14 +59,14 @@ def keep_alive():
             print(f"[keep_alive] Ошибка: {e}")
         time.sleep(240)
 
-# Запускаем бота в фоновом потоке
+# Запускаем бота
 Thread(target=run_bot, daemon=True).start()
 
-# Запускаем пинг (чтобы не уснул)
+# Запускаем пинг
 Thread(target=keep_alive, daemon=True).start()
 
 # Запускаем Flask
-if name == "main":
+if _name_ == "_main_":  # ← ДВА ПОДЧЕРКИВАНИЯ!
     port = int(os.getenv("PORT", 10000))
     print(f"🚀 Сервер запущен на порту {port}")
     flask_app.run(host="0.0.0.0", port=port)
