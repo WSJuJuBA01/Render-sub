@@ -4116,14 +4116,6 @@ def get_subscription(token):
             pass
         return_db_connection(conn)
 
-@app.route('/')
-def index():
-    return "WSVPN Bot is running."
-
-@app.route('/ping')
-def ping():
-    return "pong"
-
 # ==================== ЗАПУСК ====================
 
 if __name__ == "__main__":
@@ -4134,7 +4126,7 @@ if __name__ == "__main__":
         print("❌ DATABASE_URL не задан!")
         sys.exit(1)
     
-    port = int(os.getenv('PORT', 5000))
+    port = int(os.getenv('PORT', 5432))
     
     def delayed_start():
         print("🚀 Запуск бота...")
