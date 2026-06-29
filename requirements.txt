@@ -1,0 +1,9 @@
+pyTelegramBotAPI==4.16.1
+Flask==2.3.3
+requests==2.31.0
+beautifulsoup4==4.12.2
+html5lib==1.1
+psycopg2-binary==2.9.9
+waitress==3.0.0
+pysocks==1.7.1
+pycryptodome==3.19.1
