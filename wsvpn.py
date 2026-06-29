@@ -4,6 +4,7 @@ from flask import Flask
 from threading import Thread
 import os
 import time
+import requests
 
 TOKEN = os.getenv("BOT_TOKEN")
 
@@ -46,18 +47,17 @@ def keep_alive():
     if not url:
         url = os.getenv('PUBLIC_URL', '')
     if not url:
-        url = 'https://ваш-бот.onrender.com'
+        url = 'https://wsvpn-bobot.onrender.com'  # ← ВАШ URL!
     url = url.rstrip('/')
     
     print(f"[keep_alive] Запущен пинг для {url}")
     while True:
         try:
-            import requests
             requests.get(f"{url}/ping", timeout=10)
             print(f"[keep_alive] Пинг в {time.strftime('%H:%M:%S')}")
         except Exception as e:
             print(f"[keep_alive] Ошибка: {e}")
-        time.sleep(240)  # каждые 4 минуты
+        time.sleep(240)
 
 # Запускаем бота в фоновом потоке
 Thread(target=run_bot, daemon=True).start()
