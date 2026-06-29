@@ -1,13 +1,17 @@
-import random
+from telegram import Update
+from telegram.ext import Application, CommandHandler, MessageHandler, filters
 
-number = random.randint(1, 10)
-guess = 0
+TOKEN = "8832833214:AAH7l7_F6ruYd6D0tUDXqqsMbJlrM3Ll_E0"  # Получить у @BotFather
 
-while guess != number:
-    guess = int(input("Угадай число от 1 до 10: "))
-    if guess < number:
-        print("Больше!")
-    elif guess > number:
-        print("Меньше!")
+async def start(update: Update, context):
+    await update.message.reply_text("Привет! Я простой бот. Напиши мне что-нибудь :)")
 
-print("🎉 Угадал! Молодец!")
+async def echo(update: Update, context):
+    await update.message.reply_text(f"Ты написал: {update.message.text}")
+
+app = Application.builder().token(TOKEN).build()
+app.add_handler(CommandHandler("start", start))
+app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, echo))
+
+print("Бот запущен...")
+app.run_polling()
