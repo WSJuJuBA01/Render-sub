@@ -21,5 +21,5 @@ def main():
     print("Бот запущен...")
     app_bot.run_polling()
 
-if name == "main":  # ← ВАЖНО! ДВА ПОДЧЕРКИВАНИЯ!
+if __name__ == __"main__":  # ← ВАЖНО! ДВА ПОДЧЕРКИВАНИЯ!
     main()
