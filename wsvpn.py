@@ -16,7 +16,7 @@ app_bot = Application.builder().token(TOKEN).build()
 app_bot.add_handler(CommandHandler("start", start))
 app_bot.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, echo))
 
-flask_app = Flask(name)  # ← ВОТ ЗДЕСЬ ДОЛЖНО БЫТЬ name (с двумя подчеркиваниями!)
+flask_app = Flask(_name_)  # ← ВОТ ЗДЕСЬ ДОЛЖНО БЫТЬ name (с двумя подчеркиваниями!)
 
 @flask_app.route('/')
 def home():
