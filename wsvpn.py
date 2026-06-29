@@ -28,6 +28,7 @@ from psycopg2 import pool
 import requests
 from bs4 import BeautifulSoup
 from flask import Flask, request
+app = Flask(__name__)
 
 # ==================== КОНСТАНТЫ ====================
 
@@ -4074,6 +4075,54 @@ def subscription(token):
         except:
             pass
         return_db_connection(conn)
+
+# ==================== ВЫДАЧА ПОДПИСОК ПО ССЫЛКЕ ====================
+
+def get_subscription_keys_from_db():
+    """Получает ключи подписки из базы данных."""
+    val = get_setting('subscription_keys', '')
+    if not val:
+        return []
+    return [k for k in val.split('|||') if k]
+
+@app.route('/sub/<token>')
+def get_subscription(token):
+    """Выдаёт подписку по токену."""
+    conn = get_db_connection()
+    cur = conn.cursor()
+    try:
+        cur.execute("SELECT user_id, subscription_end FROM users WHERE token = %s", (token,))
+        user = cur.fetchone()
+        if not user:
+            return "Invalid token", 404
+        
+        user_id, subscription_end = user
+        if subscription_end < int(time.time()):
+            return "Subscription expired", 403
+        
+        keys = get_subscription_keys_from_db()
+        if not keys:
+            return "No keys available", 404
+        
+        output = "\n".join(keys)
+        return output, 200, {'Content-Type': 'text/plain; charset=utf-8'}
+    except Exception as e:
+        print(f"[sub] Ошибка: {e}")
+        return "Internal error", 500
+    finally:
+        try:
+            cur.close()
+        except:
+            pass
+        return_db_connection(conn)
+
+@app.route('/')
+def index():
+    return "WSVPN Bot is running."
+
+@app.route('/ping')
+def ping():
+    return "pong"
 
 # ==================== ЗАПУСК ====================
 
