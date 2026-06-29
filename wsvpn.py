@@ -4,7 +4,7 @@ from flask import Flask
 from threading import Thread
 import os
 
-TOKEN = os.getenv("TOKEN")  # Токен из переменных окружения Render
+TOKEN = os.getenv("BOT_TOKEN")  # Токен из переменных окружения Render
 
 # ---------- БОТ ----------
 async def start(update: Update, context):
